@@ -1,0 +1,97 @@
+defaults: &defaults
+  working_directory: ~/app
+  docker:
+    - image: circleci/node:10
+
+version: 2.1
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Set npmrc file
+          command: echo -e $NPMRC > ~/.npmrc
+      - run:
+          name: Install dependencies
+          command: npm i
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Check code syntax
+          command: npm run lint -- --plugin log-filenames
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Test
+          command: npm t
+  publish:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Set NPM tokens
+          command: echo -e $NPMRC > ~/.npmrc
+      - run:
+          name: Install published
+          command: npx published --git-tag
+  glossary:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Add to Glossary
+          command: |
+            curl --user ${CIRCLECI_API_TOKEN}: \
+              --header "Content-Type: application/json" \
+              --data "{\"build_parameters\":{\"TRIGGERING_REPOSITORY\":\"${CIRCLE_REPOSITORY_URL}\"}}" \
+              --request POST \
+              https://circleci.com/api/v1.1/project/github/fiverr/glossary/tree/master
+
+workflows:
+  version: 2.1
+  ci-cd:
+    jobs:
+      - install:
+          context: org-global
+      - lint:
+          requires:
+            - install
+      - test:
+          requires:
+            - install
+      - publish:
+          context: org-global
+          requires:
+            - test
+            - lint
+      - glossary:
+          context: org-global
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                - master
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master

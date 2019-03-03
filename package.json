@@ -1,0 +1,42 @@
+{
+  "name": "@fiverr/statsd-client",
+  "version": "0.0.0-alpha",
+  "description": "📈 A feature packed, highly customisable StatsD client",
+  "keywords": [
+    "StatsD",
+    "Graphite",
+    "Brubeck",
+    "DogStatsD",
+    "DataDog",
+    "statsd-client",
+    "dogstatsd-client",
+    "graphite tags",
+    "tags",
+    "sampling",
+    "udp",
+    "📈"
+  ],
+  "author": "Fiverr SRE",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiverr/node-statsd-client.git"
+  },
+  "homepage": "https://github.com/fiverr/node-statsd-client#readme",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha 'spec.js' '**/spec.js' --require .mocha",
+    "lint": "eslint '.*.js' '*.js' '**/*.js' -c .eslintrc.js"
+  },
+  "dependencies": {
+    "sample-size": "0.0.0"
+  },
+  "devDependencies": {
+    "@lets/wait": "^1.0.0",
+    "chai": "^4.2.0",
+    "chai-string": "^1.5.0",
+    "eslint": "^5.15.0",
+    "eslint-plugin-log-filenames": "^1.0.2",
+    "mocha": "^6.0.2"
+  }
+}
