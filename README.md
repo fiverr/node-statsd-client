@@ -22,7 +22,7 @@ stats.count('my_application_name.visit_count'); // 31 (pending bulk size)
 | 🔮 | Sampling (sample rate)
 | 🕸 | Protocols: `UDP`, `TCP`
 | 🌎 | Protocol versions: `ipv4`, `ipv6`
-| ⏲ | Custom time aggregation (Cutoff time for packets allows controlled traffic)
+| ⏲ | Custom flush period (Cutoff time for packets allows controlled traffic)
 | 📦 | Custom MTU limit (maximum transmission unit)
 | 🚨 | Error handling
 | 🎈 | And then some
@@ -35,7 +35,7 @@ stats.count('my_application_name.visit_count'); // 31 (pending bulk size)
 | `protocol` | String | `'UDP'` | Internet Protocol (UDP/TCP)
 | `protocol_version` | String | `'ipv4'` | Internet Protocol version (ipv4/ipv6)
 | `MTU` | Number | `576` | Maximum transmission size
-| `timeout` | Number | `1000` | Maximum cutoff time (ms) until flush current metric packet
+| `timeout` | Number | `1000` | Maximum cutoff time (ms) until flush current metric bulk
 | `tags` | Object | _optional_ | Default tags to be sent with every metric
 | `scheme` | String/Function | `'datadog'` | Format stats metric as: `'datadog'`, `'graphite'` (CarbonCache), or using a custom function
 | `prefix` | String | _optional_ | Optional prefix to attach to all metrics
