@@ -6,8 +6,8 @@
 ```js
 const SDC = require('@fiverr/statsd-client');
 
-const client = new SDC({host: '127.0.0.1', port: '8125'});
-client.count('my_application_name.visit_count'); // 31 (pending bulk size)
+const stats = new SDC({host: '127.0.0.1', port: '8125'});
+stats.count('my_application_name.visit_count'); // 31 (pending bulk size)
 ```
 
 ### Out-of-the box features and customisations
@@ -46,7 +46,7 @@ client.count('my_application_name.visit_count'); // 31 (pending bulk size)
 
 #### All the options:
 ```js
-const client = new SDC({
+const stats = new SDC({
 	host: '127.0.0.1',
 	port: 8125,
 	protocol: 'UDP',
@@ -74,51 +74,51 @@ Exposes a client with the functions: `count`, `time`, `gauge`, `set`, `histogram
 
 #### Count
 ```js
-client.count('some.counter');   // Increment by one.
-client.count('some.counter', 10);   // Increment by ten.
+stats.count('some.counter');   // Increment by one.
+stats.count('some.counter', 10);   // Increment by ten.
 ```
 
 #### Time
 ```js
-client.time('some.timer', 200); // Send time value in milliseconds
-client.time('some.timer', date); // If you send a date instance - it'll report the time diff
+stats.time('some.timer', 200); // Send time value in milliseconds
+stats.time('some.timer', date); // If you send a date instance - it'll report the time diff
 ```
 
 #### Gauge
 ```js
-client.gauge('some.gauge', 10); // Set gauge to 10
+stats.gauge('some.gauge', 10); // Set gauge to 10
 ```
 
 #### Set
 ```js
-client.set('your.set', 200);
+stats.set('your.set', 200);
 ```
 
 #### Histogram
 ```js
-client.histogram('some.histogram', 10, {foo: 'bar'}); // Histogram with tags
+stats.histogram('some.histogram', 10, {foo: 'bar'}); // Histogram with tags
 ```
 
 ### Options
 
 #### Tags
 ```js
-client.count('some.counter', 10, {tags: {service: 'my-service'}});
+stats.count('some.counter', 10, {tags: {service: 'my-service'}});
 ```
 
 #### Sample rate
 ```js
-client.time('some.timer', 200, {rate: .05});
+stats.time('some.timer', 200, {rate: .05});
 ```
 
 Since value is omissible, the options can skip ahead one argument:
 ```js
-client.count('some.counter', {rate: .1, tags: {tagname: 'my-tag'}});
+stats.count('some.counter', {rate: .1, tags: {tagname: 'my-tag'}});
 ```
 
 ### Use all of the features!
 ```js
-client.time(
+stats.time(
 	'response_time',
 	157,
 	{
@@ -137,14 +137,14 @@ client.time(
 ### Explicit flush
 Lets say, for example, you want to send a metric before exiting process, you'll want to flush metrics immediately.
 ```js
-client.flush();
+stats.flush();
 ```
 
 ### Generic function
 An SDC instance's `generic` function accepts same arguments as specific metric emitters with a _leading argument_ of the metric type. This is useful for dynamically sending different types of metrics.
 ```js
-client.generic('count', 'some.counter', 3);
-client.generic(SDC.TYPES.timer, 'some.timer', 200);
+stats.generic('count', 'some.counter', 3);
+stats.generic(SDC.TYPES.timer, 'some.timer', 200);
 ```
 
 ### Static `TYPES`
@@ -185,7 +185,7 @@ Scheme functions can create different formats for the stats service. It accepts 
 | tags | Object | `{method: 'POST', route: 'user/:user_id'}`
 
 ```js
-const client = new SDC({
+const stats = new SDC({
 	...
 	// Simplistic example custom scheme function
 	scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(([k, v]) => `${k}:${v}`).join(',')}`
