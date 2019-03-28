@@ -163,7 +163,7 @@ describe('SDC', () => {
 		const client = new SDC({enforceRate: true});
 		stubs.sample = () => true;
 		client.generic('count', 'a', 1, {rate: .4});
-		expect(called.push).to.be.undefined;
+		expect(called.push).to.be.true;
 	});
 	it('Should skip when sample is false', () => {
 		const client = new SDC();

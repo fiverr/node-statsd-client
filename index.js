@@ -136,7 +136,7 @@ class SDC {
 				throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
 			}
 
-			if (!this.enforceRate && !sample(rate)) {
+			if (this.enforceRate && !sample(rate)) {
 				return this.size;
 			}
 		}
