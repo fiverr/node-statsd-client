@@ -63,6 +63,7 @@ class SDC {
 	 * @param {String}   [options.prefix]
 	 * @param {Function} [options.sanitise=(default sanitiser)]
 	 * @param {Function} [options.errorHandler]
+	 * @param {Boolean}  [options.enforceRate=true]
 	 */
 	constructor(
 		{
@@ -77,6 +78,7 @@ class SDC {
 			prefix,
 			sanitise,
 			errorHandler,
+			enforceRate = true,
 		} = {}
 	) {
 		Object.assign(
@@ -86,6 +88,7 @@ class SDC {
 				timeout,
 				tags,
 				errorHandler,
+				enforceRate,
 				bulk: [],
 				timer: null,
 				send: sender({host, port, protocol, protocol_version, errorHandler, timeout}),
@@ -133,7 +136,7 @@ class SDC {
 				throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
 			}
 
-			if (!sample(rate)) {
+			if (!this.enforceRate && !sample(rate)) {
 				return this.size;
 			}
 		}

@@ -1,6 +1,6 @@
 {
   "name": "@fiverr/statsd-client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "📈 A feature packed, highly customisable StatsD client",
   "keywords": [
     "StatsD",
