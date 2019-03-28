@@ -1,6 +1,6 @@
 {
   "name": "@fiverr/statsd-client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "📈 A feature packed, highly customisable StatsD client",
   "keywords": [
     "StatsD",
@@ -29,6 +29,7 @@
     "lint": "eslint '.*.js' '*.js' '**/*.js' -c .eslintrc.js"
   },
   "dependencies": {
+    "is-number": "^7.0.0",
     "sample-size": "0.0.0"
   },
   "devDependencies": {
