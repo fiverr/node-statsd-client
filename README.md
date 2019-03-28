@@ -41,6 +41,7 @@ stats.count('my_application_name.visit_count'); // 31 (pending bulk size)
 | `prefix` | String | _optional_ | Optional prefix to attach to all metrics
 | `sanitise` | Function | † Default sanitisation | Sanitise metrics (including prefix) and tags' keys and values
 | `errorHandler` | Function | _optional_ | Handle message sending errors (see section 'Throwing errors')
+| `enforceRate` | Boolean | true | Should I enforce rate (mark as false is rate was already enforced)
 
 † **Default sanitisation**: Allow characters, numbers, underscores and dots. Replace everything else with underscore. Lowercase everything
 
