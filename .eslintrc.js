@@ -7,6 +7,9 @@ module.exports = {
 		node: true,
 		es6: true,
 	},
+	plugins: [
+		'log',
+	],
 	extends: 'eslint:recommended',
 	rules: {
 		indent: [
