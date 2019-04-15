@@ -189,7 +189,7 @@ Scheme functions can create different formats for the stats service. It accepts 
 const stats = new SDC({
 	...
 	// Simplistic example custom scheme function
-	scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(([k, v]) => `${k}:${v}`).join(',')}`
+	scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(tag => tag.join(':')).join(',')}`
 });
 ```
 
