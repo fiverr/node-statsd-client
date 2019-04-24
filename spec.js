@@ -176,6 +176,18 @@ describe('SDC', () => {
 		client.generic('count', 'a');
 		expect(contexts.push).to.equal(client);
 	});
+	it('Should expose it\'s bulk size', () => {
+		const client = new SDC();
+		const before = client.size;
+		client.generic('count', 'a');
+		expect(client.size).to.be.above(before);
+	});
+	it('Should return a number (bulk size)', () => {
+		const client = new SDC();
+		const bulkSize = client.generic('count', 'a');
+		expect(bulkSize).to.be.a('number');
+		expect(bulkSize).to.equal(client.size);
+	});
 	it('Should follow functional pipeline', () => {
 		const order = [];
 		const client = new SDC();
