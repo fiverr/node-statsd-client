@@ -1,6 +1,6 @@
 {
   "name": "@fiverr/statsd-client",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "📈 A feature packed, highly customisable StatsD client",
   "keywords": [
     "StatsD",
@@ -26,18 +26,19 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha 'spec.js' '**/spec.js' --require .mocha",
-    "lint": "eslint '.*.js' '*.js' '**/*.js' -c .eslintrc.js"
+    "lint": "eslint '.*.js' '*.js' '**/*.js'"
   },
   "dependencies": {
     "is-number": "^7.0.0",
-    "sample-size": "^1.0.0"
+    "sample-size": "^1.0.1"
   },
   "devDependencies": {
+    "@fiverr/eslint-config-fiverr": "^3.1.2",
     "@lets/wait": "^1.0.0",
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-log": "^1.0.0",
-    "mocha": "^6.1.2"
+    "eslint": "^6.1.0",
+    "eslint-plugin-log": "^1.2.3",
+    "mocha": "^6.2.0"
   }
 }

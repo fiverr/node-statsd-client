@@ -48,17 +48,17 @@ stats.count('my_application_name.visit_count'); // 31 (pending bulk size)
 #### All the options:
 ```js
 const stats = new SDC({
-	host: '127.0.0.1',
-	port: 8125,
-	protocol: 'UDP',
-	protocol_version: 'ipv6',
-	MTU: 1432,
-	timeout: 2000,
-	tags: {environment: 'production'},
-	scheme: 'datadog',
-	prefix: 'my_application_name',
-	sanitise: string => `${string}`.replace(/(?!\.)\W/g, '_').toLowerCase(),
-	errorHandler: (error, data) => console.error(error, data),
+  host: '127.0.0.1',
+  port: 8125,
+  protocol: 'UDP',
+  protocol_version: 'ipv6',
+  MTU: 1432,
+  timeout: 2000,
+  tags: {environment: 'production'},
+  scheme: 'datadog',
+  prefix: 'my_application_name',
+  sanitise: string => `${string}`.replace(/(?!\.)\W/g, '_').toLowerCase(),
+  errorHandler: (error, data) => console.error(error, data),
 });
 ```
 
@@ -69,9 +69,13 @@ Exposes a client with the functions: `count`, `time`, `gauge`, `set`, `histogram
 | Argument | Type | Default | Meaning
 | - | - | - | -
 | metric | String | [Mandatory] | The metric name (key)
-| value | Number|Date | 1 | The value to report (A date instance will send the time diff)
+| value | Number\|Date\|BigInt | 1 | The value to report †
 | options.rate | Number | - | Sample rate - a fraction of 1 (.01 is one percent)
 | options.tags | Object | - | Key-value pairs of tags set as object literal
+
+> † If `value` if a Date - instance will send the time diff (`Date.now()`)
+>
+> † If `value` if a BigInt - instance will send the time diff (`process.hrtime.bigint()`) **in milliseconds** with nanoseconds accuracy
 
 #### Count
 ```js
@@ -82,7 +86,16 @@ stats.count('some.counter', 10);   // Increment by ten.
 #### Time
 ```js
 stats.time('some.timer', 200); // Send time value in milliseconds
-stats.time('some.timer', date); // If you send a date instance - it'll report the time diff
+
+// Send date
+const start = new Date();
+...
+stats.time('some.timer', start); // instance will send the time diff (`Date.now()`)
+
+// Send high resolution time
+const start = process.hrtime.bigint();
+...
+stats.time('some.timer', start); // instance will send the time diff (`process.hrtime.bigint()`) in milliseconds with nanoseconds accuracy
 ```
 
 #### Gauge
@@ -120,16 +133,16 @@ stats.count('some.counter', {rate: .1, tags: {tagname: 'my-tag'}});
 ### Use all of the features!
 ```js
 stats.time(
-	'response_time',
-	157,
-	{
-		rate: .05,
-		tags: {
-			method: 'GET',
-			route: 'users/:user_id',
-			status_code: 200,
-		},
-	}
+  'response_time',
+  157,
+  {
+    rate: .05,
+    tags: {
+      method: 'GET',
+      route: 'users/:user_id',
+      status_code: 200,
+    },
+  }
 );
 ```
 
@@ -170,7 +183,7 @@ The client aims to perform in an asynchronous and non disruptive manner. That's 
 The `errorHandler` function will accept two arguments: first is the error and the second is the bulk failed to be sent - for failure analysis.
 ```js
 {
-	errorHandler: (error, bulk) => console.error(error, bulk)
+  errorHandler: (error, bulk) => console.error(error, bulk)
 }
 ```
 
@@ -187,17 +200,17 @@ Scheme functions can create different formats for the stats service. It accepts 
 
 ```js
 const stats = new SDC({
-	...
-	// Simplistic example custom scheme function
-	scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(tag => tag.join(':')).join(',')}`
+  ...
+  // Simplistic example custom scheme function
+  scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(tag => tag.join(':')).join(',')}`
 });
 ```
 
 ### Recommended MTU buffer sizes
 - **By protocol**
-	- IPV4: 576
-	- IPV6: 1500
+  - IPV4: 576
+  - IPV6: 1500
 - **By speed**
-	- Commodity Internet: 512
-	- Fast Ethernet: 1432
-	- Gigabit Ethernet: 8932
+  - Commodity Internet: 512
+  - Fast Ethernet: 1432
+  - Gigabit Ethernet: 8932
