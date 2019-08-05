@@ -5,15 +5,16 @@ const push = require('./lib/push');
 const sender = require('./lib/sender');
 const spread = require('./lib/spread');
 const types = require('./lib/types');
+
 const TYPES_LIST = Object.keys(types);
 const TYPES = Object.freeze(
-	TYPES_LIST.reduce(
-		(accumulator, type) => Object.assign(
-			accumulator,
-			{[type]: type}
-		),
-		{}
-	)
+    TYPES_LIST.reduce(
+        (accumulator, type) => Object.assign(
+            accumulator,
+            {[type]: type}
+        ),
+        {}
+    )
 );
 
 /**
@@ -36,7 +37,7 @@ const TYPES = Object.freeze(
  * @property {Function} histogram
  */
 class SDC {
-	/**
+    /**
 	 * @static
 	 * @getter
 	 * @type {Object}
@@ -46,11 +47,11 @@ class SDC {
 	 * @property {String} set       'set'
 	 * @property {String} histogram 'histogram'
 	 */
-	static get TYPES() {
-		return TYPES;
-	}
+    static get TYPES() {
+        return TYPES;
+    }
 
-	/**
+    /**
 	 * SDC constructor
 	 * @param {String}   [options.host='127.0.0.1']
 	 * @param {String}   [options.port=8125]
@@ -65,52 +66,52 @@ class SDC {
 	 * @param {Function} [options.errorHandler]
 	 * @param {Boolean}  [options.enforceRate=true]
 	 */
-	constructor(
-		{
-			host = '127.0.0.1',
-			port = 8125,
-			protocol = 'UDP',
-			protocol_version = 'ipv4',
-			MTU = 576,
-			timeout = 1000,
-			tags,
-			scheme,
-			prefix,
-			sanitise,
-			errorHandler,
-			enforceRate = true,
-		} = {}
-	) {
-		Object.assign(
-			this,
-			{
-				MTU, // Maximum Transmission Unit
-				timeout,
-				tags,
-				errorHandler,
-				enforceRate,
-				bulk: [],
-				timer: null,
-				send: sender({host, port, protocol, protocol_version, errorHandler, timeout}),
-				format: formatter({sanitise, prefix, scheme}),
-				flush: flush.bind(this),
-			}
-		);
+    constructor(
+        {
+            host = '127.0.0.1',
+            port = 8125,
+            protocol = 'UDP',
+            protocol_version = 'ipv4',
+            MTU = 576,
+            timeout = 1000,
+            tags,
+            scheme,
+            prefix,
+            sanitise,
+            errorHandler,
+            enforceRate = true
+        } = {}
+    ) {
+        Object.assign(
+            this,
+            {
+                MTU, // Maximum Transmission Unit
+                timeout,
+                tags,
+                errorHandler,
+                enforceRate,
+                bulk: [],
+                timer: null,
+                send: sender({host, port, protocol, protocol_version, errorHandler, timeout}),
+                format: formatter({sanitise, prefix, scheme}),
+                flush: flush.bind(this)
+            }
+        );
 
-		[...TYPES_LIST, 'generic'].forEach(fn => {
-			this[fn] = this[fn].bind(this);
-		});
-	}
+        [...TYPES_LIST, 'generic'].forEach((fn) => {
+            this[fn] = this[fn].bind(this);
+        });
+    }
 
-	/**
+    /**
 	 * The size of current bulk
 	 * @return {Number}
 	 */
-	get size() {
-		return this.bulk.join('\n').length;
-	}
+    get size() {
+        return this.bulk.join('\n').length;
+    }
 
-	/**
+    /**
 	 * Generic metric send method
 	 * @param  {String} type           Metric type
 	 * @param  {String} key            The metric name (key)
@@ -119,51 +120,52 @@ class SDC {
 	 * @param  {Object} [options.tags] Key-value pairs of tags set as object literal
 	 * @return {Number}                current size of the bulk
 	 */
-	generic(...args) {
-		let [
-			type,
-			key,
-			value = 1,
-			rate,
-			tags,
-		] = spread(args);
+    generic(...args) {
+        let [
+            type, // eslint-disable-line prefer-const
+            key, // eslint-disable-line prefer-const
+            value = 1, // eslint-disable-line prefer-const
+            rate, // eslint-disable-line prefer-const
+            tags
+        ] = spread(args);
 
-		if (rate) {
-			if (typeof rate !== 'number') {
-				throw new TypeError(`Expected 'rate' to be a number, instead got a ${typeof rate}`);
-			}
-			if (rate > 1) {
-				throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
-			}
+        if (rate) {
+            if (typeof rate !== 'number') {
+                throw new TypeError(`Expected 'rate' to be a number, instead got a ${typeof rate}`);
+            }
+            if (rate > 1) {
+                throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
+            }
 
-			if (this.enforceRate && !sample(rate)) {
-				return this.size;
-			}
-		}
+            if (this.enforceRate && !sample(rate)) {
+                return this.size;
+            }
+        }
 
-		if (this.tags) {
-			tags = Object.assign({}, this.tags, tags || {});
-		}
-		return push.call(
-			this,
-			this.format(
-				type,
-				key,
-				value,
-				{ rate, tags }
-			)
-		);
-	}
+        if (this.tags) {
+            tags = Object.assign({}, this.tags, tags || {});
+        }
+        return push.call(
+            this,
+            this.format(
+                type,
+                key,
+                value,
+                { rate, tags }
+            )
+        );
+    }
 }
 
 Object.defineProperties(
-	SDC.prototype,
-	TYPES_LIST.reduce(
-		(accumulator, type) => Object.assign(
-			accumulator,
-			{
-				[type]: {
-					/**
+    SDC.prototype,
+    TYPES_LIST.reduce(
+        (accumulator, type) => Object.assign(
+            accumulator,
+            {
+                [type]: {
+
+                    /**
 					 * Specific metric type send method
 					 * @param  {String} key            The metric name (key)
 					 * @param  {Number} [value]        The value to report
@@ -171,17 +173,17 @@ Object.defineProperties(
 					 * @param  {Object} [options.tags] Key-value pairs of tags set as object literal
 					 * @return {Number}                current size of the bulk
 					 */
-					value: function(...args) {
-						return this.generic(type, ...args);
-					},
-					configurable: true,
-					enumerable: true,
-					writable: true,
-				},
-			}
-		),
-		{}
-	)
+                    value: function(...args) {
+                        return this.generic(type, ...args);
+                    },
+                    configurable: true,
+                    enumerable: true,
+                    writable: true
+                }
+            }
+        ),
+        {}
+    )
 );
 
 module.exports = SDC;
