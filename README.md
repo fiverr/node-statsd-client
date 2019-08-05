@@ -69,9 +69,12 @@ Exposes a client with the functions: `count`, `time`, `gauge`, `set`, `histogram
 | Argument | Type | Default | Meaning
 | - | - | - | -
 | metric | String | [Mandatory] | The metric name (key)
-| value | Number|Date | 1 | The value to report (A date instance will send the time diff)
+| value | Number|Date|BigInt | 1 | The value to report †
 | options.rate | Number | - | Sample rate - a fraction of 1 (.01 is one percent)
 | options.tags | Object | - | Key-value pairs of tags set as object literal
+
+> † If `value` if a Date - instance will send the time diff (`Date.now()`)
+> † If `value` if a BigInt - instance will send the time diff (`process.hrtime.bigint()`) **in milliseconds** with nanoseconds accuracy
 
 #### Count
 ```js
@@ -82,7 +85,15 @@ stats.count('some.counter', 10);   // Increment by ten.
 #### Time
 ```js
 stats.time('some.timer', 200); // Send time value in milliseconds
-stats.time('some.timer', date); // If you send a date instance - it'll report the time diff
+
+const start = new Date();
+...
+stats.time('some.timer', start); // instance will send the time diff (`Date.now()`)
+
+
+const start = process.hrtime.bigint();
+...
+stats.time('some.timer', start); // instance will send the time diff (`process.hrtime.bigint()`) in milliseconds with nanoseconds accuracy
 ```
 
 #### Gauge

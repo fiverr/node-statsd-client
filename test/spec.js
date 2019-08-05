@@ -90,7 +90,7 @@ describe('Integration: bulk sending', () => {
 	after(cacheCleanup);
 
 	[
-		{protocol: 'TCP', port: 80},
+		{protocol: 'TCP', port: 8081},
 		{protocol: 'UDP', port: 2003},
 	].forEach(({protocol, port}) => {
 		if (process.env.CI && protocol === 'TCP') {
