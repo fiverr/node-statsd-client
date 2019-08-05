@@ -86,11 +86,12 @@ stats.count('some.counter', 10);   // Increment by ten.
 ```js
 stats.time('some.timer', 200); // Send time value in milliseconds
 
+// Send date
 const start = new Date();
 ...
 stats.time('some.timer', start); // instance will send the time diff (`Date.now()`)
 
-
+// Send high resolution time
 const start = process.hrtime.bigint();
 ...
 stats.time('some.timer', start); // instance will send the time diff (`process.hrtime.bigint()`) in milliseconds with nanoseconds accuracy
