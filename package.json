@@ -25,6 +25,7 @@
   "homepage": "https://github.com/fiverr/node-statsd-client#readme",
   "main": "index.js",
   "scripts": {
+    "docs": "docsify serve docs -p 6375",
     "test": "mocha 'spec.js' '**/spec.js' --require .mocha",
     "lint": "eslint '.*.js' '*.js' '**/*.js'"
   },
@@ -37,6 +38,7 @@
     "@lets/wait": "^1.0.0",
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
+    "docsify-cli": "^4.3.0",
     "eslint": "^6.1.0",
     "eslint-plugin-log": "^1.2.3",
     "mocha": "^6.2.0"
