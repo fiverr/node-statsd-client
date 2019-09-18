@@ -9,6 +9,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: node -v
       - run:
           name: Install dependencies
           command: npm i
@@ -24,6 +25,7 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+      - run: node -v
       - run:
           name: Install dependencies
           command: npm i
