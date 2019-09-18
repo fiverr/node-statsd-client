@@ -1,41 +1,32 @@
 defaults: &defaults
   working_directory: ~/app
   docker:
-    - image: circleci/node:10
+    - image: circleci/node:12
 
 version: 2.1
 jobs:
-  install:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Set npmrc file
-          command: echo -e $NPMRC > ~/.npmrc
-      - run:
-          name: Install dependencies
-          command: npm i
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-  lint:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Check code syntax
-          command: npm run lint
   test:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: npm i
+      - run:
+          name: Test
+          command: npm t
+      - run:
+          name: Check code syntax
+          command: npm run lint -- --plugin log
+  test_node_10:
+    <<: *defaults
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm i
       - run:
           name: Test
           command: npm t
@@ -43,8 +34,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Set NPM tokens
           command: echo -e $NPMRC > ~/.npmrc
@@ -68,19 +57,13 @@ workflows:
   version: 2.1
   ci-cd:
     jobs:
-      - install:
-          context: org-global
-      - lint:
-          requires:
-            - install
-      - test:
-          requires:
-            - install
+      - test
+      - test_node_10
       - publish:
           context: org-global
           requires:
             - test
-            - lint
+            - test_node_10
       - glossary:
           context: org-global
           requires:

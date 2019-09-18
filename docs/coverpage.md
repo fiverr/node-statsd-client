@@ -1,7 +1,7 @@
 - [![](/assets/sre.svg)](/?id=main)
 - [![](/assets/fiverr.svg)](/?id=main)
 
-[Another StatsD client for nodejs](/?id=main)
+[📈 A feature packed, highly customisable StatsD client](/?id=main)
 
 `npm i @fiverr/statsd-client`
 
