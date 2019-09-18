@@ -22,7 +22,7 @@
     "type": "git",
     "url": "git+https://github.com/fiverr/node-statsd-client.git"
   },
-  "homepage": "https://github.com/fiverr/node-statsd-client#readme",
+  "homepage": "https://fiverr.github.io/node-statsd-client",
   "main": "index.js",
   "scripts": {
     "docs": "docsify serve docs -p 6375",

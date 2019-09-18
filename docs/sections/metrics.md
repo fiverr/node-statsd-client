@@ -20,7 +20,7 @@ stats.count('some.counter');   // Increment by one.
 stats.count('some.counter', 10);   // Increment by ten.
 ```
 
-### Time
+### Time (number|date|bigint)
 ```js
 stats.time('some.timer', 200); // Send time value in milliseconds
 
@@ -66,6 +66,8 @@ Since value is omissible, the options can skip ahead one argument:
 ```js
 stats.count('some.counter', {rate: .1, tags: {tagname: 'my-tag'}});
 ```
+
+The `enforceRate` instance option comes in useful if you want to enforce the sample rate before sending metric here but still sand the rate named argument.
 
 ## Use all of the features!
 ```js
