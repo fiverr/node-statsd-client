@@ -131,7 +131,7 @@ class SDC {
 
         if (rate) {
             if (typeof rate !== 'number') {
-                throw new TypeError(`Expected 'rate' to be a number, instead got a ${typeof rate}`);
+                throw new TypeError(`Expected 'rate' to be a number, instead got ${rate} (${typeof rate})`);
             }
             if (rate > 1) {
                 throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
