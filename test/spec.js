@@ -109,6 +109,7 @@ describe('Integration: bulk sending', () => {
 
             new Array(4).fill('a').forEach(client.count);
             expect(metrics).to.be.undefined;
+            await wait(5);
 
             client.flush();
             expect(metrics).to.be.instanceof(Buffer);
