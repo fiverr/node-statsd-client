@@ -1,4 +1,5 @@
 const sample = require('sample-size');
+const betterror = require('./lib/betterror');
 const flush = require('./lib/flush');
 const formatter = require('./lib/formatter');
 const push = require('./lib/push');
@@ -131,10 +132,10 @@ class SDC {
 
         if (rate) {
             if (typeof rate !== 'number') {
-                throw new TypeError(`Expected 'rate' to be a number, instead got ${rate} (${typeof rate})`);
+                throw betterror(new TypeError(`Expected 'rate' to be a number, instead got ${rate} (${typeof rate})`), { type, key, value, rate, tags });
             }
             if (rate > 1) {
-                throw new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`);
+                throw betterror(new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`), { type, key, value, rate, tags });
             }
 
             if (this.enforceRate && !sample(rate)) {
