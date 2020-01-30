@@ -93,8 +93,18 @@ class SDC {
                 enforceRate,
                 bulk: [],
                 timer: null,
-                send: sender({host, port, protocol, protocol_version, errorHandler, timeout}),
-                format: formatter({sanitise, prefix, scheme}),
+                send: sender({
+                    host,
+                    port,
+                    protocol,
+                    protocol_version,
+                    errorHandler
+                }),
+                format: formatter({
+                    sanitise,
+                    prefix,
+                    scheme
+                }),
                 flush: flush.bind(this)
             }
         );
@@ -132,10 +142,16 @@ class SDC {
 
         if (rate) {
             if (typeof rate !== 'number') {
-                throw betterror(new TypeError(`Expected 'rate' to be a number, instead got ${rate} (${typeof rate})`), { type, key, value, rate, tags });
+                throw betterror(
+                    new TypeError(`Expected 'rate' to be a number, instead got ${rate} (${typeof rate})`),
+                    { type, key, value, rate, tags }
+                );
             }
             if (rate > 1) {
-                throw betterror(new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`), { type, key, value, rate, tags });
+                throw betterror(
+                    new TypeError(`Expected 'rate' to be a number between 0 and 1, instead got ${rate}`),
+                    { type, key, value, rate, tags }
+                );
             }
 
             if (this.enforceRate && !sample(rate)) {

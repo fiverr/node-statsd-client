@@ -10,4 +10,5 @@ Object.assign(
     }
 );
 
+setTimeout(() => process.exit(0), 20000);
 process.on('unhandledRejection', (error) => { throw error; });
