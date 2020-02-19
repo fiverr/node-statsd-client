@@ -6,7 +6,7 @@ const results = [];
 describe('Integration', () => {
     let SDC;
     before(() => {
-        cacheCleanup();
+        teardown();
         require('../lib/sender');
         require.cache[require.resolve('../lib/sender')].exports = () => (...args) => results.push(...args);
         SDC = require('..');
@@ -14,7 +14,7 @@ describe('Integration', () => {
     beforeEach(() => {
         results.length = 0;
     });
-    after(cacheCleanup);
+    after(teardown);
     it('Should sanitise key', () => {
         const client = new SDC({MTU: 0});
         client.count('Hello1-there$.');
@@ -80,7 +80,7 @@ describe('Integration: bulk sending', () => {
             }
         };
     }
-    before(cacheCleanup);
+    before(teardown);
     beforeEach(() => {
         mock(() => null);
     });
@@ -88,52 +88,51 @@ describe('Integration: bulk sending', () => {
         UDPsocket.send = send;
         TCPsocket.write = write;
     });
-    after(cacheCleanup);
+    after(teardown);
 
     [
-        {protocol: 'TCP', port: 8081},
-        {protocol: 'UDP', port: 2003}
-    ].forEach(({protocol, port}) => {
-        if (process.env.CI && protocol === 'TCP') {
-            it('Problems testing TCP connections on CI machines');
-            return;
+        { protocol: 'UDP', port: 2003 },
+        process.env.CI ? null : { protocol: 'TCP', port: 8081 }
+    ].filter(Boolean).forEach(
+        ({protocol, port}) => {
+            process.stdout.write(JSON.stringify({protocol, port}));
+
+            it(`Should flush metrics to ${protocol} socket in bulk`, async() => {
+                let metrics;
+                mock((buffer) => {
+                    metrics = buffer;
+                });
+                const SDC = require('..');
+                const client = new SDC({protocol, port});
+
+                new Array(4).fill('a').forEach(client.count);
+                expect(metrics).to.be.undefined;
+                await wait(5);
+
+                client.flush();
+                expect(metrics).to.be.instanceof(Buffer);
+                expect(metrics.toString()).to.have.entriesCount('\n', 3);
+            });
+
+            it(`Should send metrics to ${protocol} socket in bulk`, async() => {
+                let metrics;
+                mock((buffer) => {
+                    metrics = buffer;
+                });
+                const SDC = require('..');
+                const client = new SDC({protocol, port, timeout: 1});
+
+                new Array(4).fill('a').forEach(client.count);
+                expect(metrics).to.be.undefined;
+                await wait(5);
+                expect(metrics).to.be.instanceof(Buffer);
+                expect(metrics.toString()).to.have.entriesCount('\n', 3);
+            });
         }
-
-        it(`Should flush metrics to ${protocol} socket in bulk`, async() => {
-            let metrics;
-            mock((buffer) => {
-                metrics = buffer;
-            });
-            const SDC = require('..');
-            const client = new SDC({protocol, port});
-
-            new Array(4).fill('a').forEach(client.count);
-            expect(metrics).to.be.undefined;
-            await wait(5);
-
-            client.flush();
-            expect(metrics).to.be.instanceof(Buffer);
-            expect(metrics.toString()).to.have.entriesCount('\n', 3);
-        });
-
-        it(`Should send metrics to ${protocol} socket in bulk`, async() => {
-            let metrics;
-            mock((buffer) => {
-                metrics = buffer;
-            });
-            const SDC = require('..');
-            const client = new SDC({protocol, port, timeout: 1});
-
-            new Array(4).fill('a').forEach(client.count);
-            expect(metrics).to.be.undefined;
-            await wait(5);
-            expect(metrics).to.be.instanceof(Buffer);
-            expect(metrics.toString()).to.have.entriesCount('\n', 3);
-        });
-    });
+    );
 });
 
-function cacheCleanup() {
+function teardown() {
     delete require.cache[require.resolve('..')];
     const lib = resolve(__dirname, '..', 'lib');
 
