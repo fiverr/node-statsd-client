@@ -12,7 +12,7 @@ const TYPES = Object.freeze(
     TYPES_LIST.reduce(
         (accumulator, type) => Object.assign(
             accumulator,
-            {[type]: type}
+            { [type]: type }
         ),
         {}
     )

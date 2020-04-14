@@ -24,7 +24,7 @@ function piggyback(dependency, fn) {
 
 describe('SDC', () => {
     let SDC;
-    const {random} = Math;
+    const { random } = Math;
     before(() => {
         require('sample-size');
         delete require.cache[require.resolve('.')];
@@ -71,7 +71,7 @@ describe('SDC', () => {
         });
     });
     it('Should not accept changes to the static types object (freeze)', () => {
-        const {TYPES} = SDC;
+        const { TYPES } = SDC;
         TYPES.counter = 'count';
         expect(TYPES.counter).to.be.undefined;
     });
@@ -112,7 +112,7 @@ describe('SDC', () => {
     it('Should have specific metrics functions to call on generic function', () => {
         const client = new SDC();
         const excepted = [];
-        const sent = ['A', 2, {key: 'balue'}];
+        const sent = ['A', 2, { key: 'balue' }];
         client.generic = (...args) => excepted.push(...args);
         [
             'count',
@@ -127,48 +127,48 @@ describe('SDC', () => {
         });
     });
     it('Should assign default tags to metrics', () => {
-        const client = new SDC({tags: {environment: 'production'}});
+        const client = new SDC({ tags: { environment: 'production' } });
         let _tags;
-        client.format = (type, key, value, {tags} = {}) => {
+        client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
         };
         client.generic('count', 'a');
-        expect(_tags).to.include({environment: 'production'});
+        expect(_tags).to.include({ environment: 'production' });
     });
     it('Should accept options as last argument', () => {
         const client = new SDC();
         let _tags;
-        client.format = (type, key, value, {tags} = {}) => {
+        client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
         };
-        client.generic('count', 'a', {tags: {environment: 'development'}});
-        expect(_tags).to.include({environment: 'development'});
+        client.generic('count', 'a', { tags: { environment: 'development' } });
+        expect(_tags).to.include({ environment: 'development' });
     });
     it('Should override default tags', () => {
-        const client = new SDC({tags: {environment: 'production'}});
+        const client = new SDC({ tags: { environment: 'production' } });
         let _tags;
-        client.format = (type, key, value, {tags} = {}) => {
+        client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
         };
-        client.generic('count', 'a', 1, {tags: {environment: 'development'}});
-        expect(_tags).to.include({environment: 'development'});
+        client.generic('count', 'a', 1, { tags: { environment: 'development' } });
+        expect(_tags).to.include({ environment: 'development' });
     });
     it('Should push when sample is true', () => {
         const client = new SDC();
         stubs.sample = () => true;
-        client.generic('count', 'a', 1, {rate: 0.4});
+        client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.true;
     });
     it('Should push when sample is false, but enforceRate is true', () => {
-        const client = new SDC({enforceRate: true});
+        const client = new SDC({ enforceRate: true });
         stubs.sample = () => true;
-        client.generic('count', 'a', 1, {rate: 0.4});
+        client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.true;
     });
     it('Should skip when sample is false', () => {
         const client = new SDC();
         stubs.sample = () => false;
-        client.generic('count', 'a', 1, {rate: 0.4});
+        client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.undefined;
     });
     it('Should call push in context', () => {

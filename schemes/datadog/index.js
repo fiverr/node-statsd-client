@@ -5,7 +5,7 @@ const DELIMETER_TAGS = '#';
 const DELIMETER_TAGS_K_V = ':';
 const DELIMETER_TAGS_LIST = ',';
 
-module.exports = function scheme({type, key, value, rate, tags}) {
+module.exports = function scheme({ type, key, value, rate, tags }) {
     const parts = [
         key,
         DELIMETER_KEY_VALUE,
