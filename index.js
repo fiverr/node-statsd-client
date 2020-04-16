@@ -112,6 +112,8 @@ class SDC {
         [...TYPES_LIST, 'generic'].forEach((fn) => {
             this[fn] = this[fn].bind(this);
         });
+
+        process.on('exit', this.flush);
     }
 
     /**
@@ -171,6 +173,11 @@ class SDC {
                 { rate, tags }
             )
         );
+    }
+
+    destroy() {
+        process.off('exit', this.flush);
+        this.send.destroy();
     }
 }
 

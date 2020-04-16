@@ -24,6 +24,7 @@ function piggyback(dependency, fn) {
 
 describe('SDC', () => {
     let SDC;
+    let client = null;
     const { random } = Math;
     before(() => {
         require('sample-size');
@@ -52,6 +53,8 @@ describe('SDC', () => {
     });
     afterEach(() => {
         Math.random = random;
+        client && client.destroy();
+        client = null;
     });
     after(() => {
         dependencies.forEach((dependency) => {
@@ -81,7 +84,7 @@ describe('SDC', () => {
             timeout: 1050,
             timer: null
         };
-        const client = new SDC(options);
+        client = new SDC(options);
         expect(client).to.include({
             MTU: 1234,
             timeout: 1050,
@@ -102,7 +105,7 @@ describe('SDC', () => {
         )
     );
     it('Should have some (non prototype) functionality', () => {
-        const client = new SDC();
+        client = new SDC();
         expect(client.bulk).to.deep.equal([]);
         expect(client.timer).to.equal(null);
         expect(client.send).to.be.a('function');
@@ -110,7 +113,7 @@ describe('SDC', () => {
         expect(client.flush).to.be.a('function');
     });
     it('Should have specific metrics functions to call on generic function', () => {
-        const client = new SDC();
+        client = new SDC();
         const excepted = [];
         const sent = ['A', 2, { key: 'balue' }];
         client.generic = (...args) => excepted.push(...args);
@@ -127,7 +130,7 @@ describe('SDC', () => {
         });
     });
     it('Should assign default tags to metrics', () => {
-        const client = new SDC({ tags: { environment: 'production' } });
+        client = new SDC({ tags: { environment: 'production' } });
         let _tags;
         client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
@@ -136,7 +139,7 @@ describe('SDC', () => {
         expect(_tags).to.include({ environment: 'production' });
     });
     it('Should accept options as last argument', () => {
-        const client = new SDC();
+        client = new SDC();
         let _tags;
         client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
@@ -145,7 +148,7 @@ describe('SDC', () => {
         expect(_tags).to.include({ environment: 'development' });
     });
     it('Should override default tags', () => {
-        const client = new SDC({ tags: { environment: 'production' } });
+        client = new SDC({ tags: { environment: 'production' } });
         let _tags;
         client.format = (type, key, value, { tags } = {}) => {
             _tags = tags;
@@ -154,43 +157,43 @@ describe('SDC', () => {
         expect(_tags).to.include({ environment: 'development' });
     });
     it('Should push when sample is true', () => {
-        const client = new SDC();
+        client = new SDC();
         stubs.sample = () => true;
         client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.true;
     });
     it('Should push when sample is false, but enforceRate is true', () => {
-        const client = new SDC({ enforceRate: true });
+        client = new SDC({ enforceRate: true });
         stubs.sample = () => true;
         client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.true;
     });
     it('Should skip when sample is false', () => {
-        const client = new SDC();
+        client = new SDC();
         stubs.sample = () => false;
         client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.undefined;
     });
     it('Should call push in context', () => {
-        const client = new SDC();
+        client = new SDC();
         client.generic('count', 'a');
         expect(contexts.push).to.equal(client);
     });
     it('Should expose it\'s bulk size', () => {
-        const client = new SDC();
+        client = new SDC();
         const before = client.size;
         client.generic('count', 'a');
         expect(client.size).to.be.above(before);
     });
     it('Should return a number (bulk size)', () => {
-        const client = new SDC();
+        client = new SDC();
         const bulkSize = client.generic('count', 'a');
         expect(bulkSize).to.be.a('number');
         expect(bulkSize).to.equal(client.size);
     });
     it('Should follow functional pipeline', () => {
         const order = [];
-        const client = new SDC();
+        client = new SDC();
         piggyback('push', () => order.push('push'));
         const format = client.format;
         client.format = function(...args) {
@@ -201,9 +204,17 @@ describe('SDC', () => {
         expect(order).to.deep.equal(['format', 'push']);
     });
     it('Should push whatever is returned from format method', () => {
-        const client = new SDC();
+        client = new SDC();
         client.format = () => 'some string';
         client.generic('count', 'a');
         expect(parameters.push).to.deep.equal(['some string']);
+    });
+    it('Should flush metrics before process exit', () => {
+        const stats = new SDC();
+        let flushed = false;
+        stats.send = () => { flushed = true; };
+        expect(flushed).to.be.false;
+        process.emit('exit', 0);
+        expect(flushed).to.be.true;
     });
 });

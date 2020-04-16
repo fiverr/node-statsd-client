@@ -6,10 +6,13 @@ Lets say, for example, you want to send a metric before exiting process, you'll 
 stats.flush();
 ```
 
-You can use this ability to make sure all pending metrics are being sent before your process exists
 ```js
-process.on('SIGKILL', stats.flush);
+if (someThingHorribleHappened) {
+  stats.flush();
+  process.kill();
+}
 ```
+
 
 ## Generic function
 An SDC instance's `generic` function accepts same arguments as specific metric emitters with a _leading argument_ of the metric type.
