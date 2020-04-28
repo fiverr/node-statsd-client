@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/app
   docker:
-    - image: circleci/node:12
+    - image: circleci/node:14
 
 version: 2.1
 jobs:
@@ -23,6 +23,19 @@ jobs:
     <<: *defaults
     docker:
       - image: circleci/node:10
+    steps:
+      - checkout
+      - run: node -v
+      - run:
+          name: Install dependencies
+          command: npm i
+      - run:
+          name: Test
+          command: npm t
+  test_node_12:
+    <<: *defaults
+    docker:
+      - image: circleci/node:12
     steps:
       - checkout
       - run: node -v
@@ -61,11 +74,13 @@ workflows:
     jobs:
       - test
       - test_node_10
+      - test_node_12
       - publish:
           context: org-global
           requires:
             - test
             - test_node_10
+            - test_node_12
       - glossary:
           context: org-global
           requires:
