@@ -142,6 +142,19 @@ class SDC {
             tags
         ] = spread(args);
 
+        if (!key) {
+            throw betterror(
+                new RangeError(`Expected 'key' to be a non empty string, instead found ${key} (${typeof key})`),
+                { type, key, value, rate, tags }
+            );
+        }
+        if (typeof value !== 'number' && Number(value) != value) { // eslint-disable-line eqeqeq
+            throw betterror(
+                new RangeError(`Expected 'value' to be a number, instead found ${key} (${typeof key})`),
+                { type, key, value, rate, tags }
+            );
+        }
+
         if (rate) {
             if (typeof rate !== 'number') {
                 throw betterror(
