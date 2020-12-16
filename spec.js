@@ -209,14 +209,6 @@ describe('SDC', () => {
         client.generic('count', 'a');
         expect(parameters.push).to.deep.equal(['some string']);
     });
-    it('Should throw error when no key is passed', () => {
-        client = new SDC();
-        expect(() => client.generic('count')).to.throw(RangeError);
-    });
-    it('Should throw error when non numeric value is passed', () => {
-        client = new SDC();
-        expect(() => client.generic('count', 'a', 'hi')).to.throw(RangeError);
-    });
     it('Should flush metrics before process exit', () => {
         const stats = new SDC();
         let flushed = false;
