@@ -5,26 +5,26 @@ describe('graphite scheme', () => {
         expect(scheme({
             key: 'k',
             value: 'b',
-            type: 't'
-        })).to.equal('k:b|t');
+            type: 'ms'
+        })).to.equal('k:b|ms');
     });
     it('Should append formatted carbon tags before value', () => {
         expect(scheme({
             key: 'k',
             value: 'b',
-            type: 't',
+            type: 'ms',
             tags: {
                 a: 'A',
                 b: 'B'
             }
-        })).to.equal('k;a=A;b=B:b|t');
+        })).to.equal('k;a=A;b=B:b|ms');
     });
     it('Should append rate after the value', () => {
         expect(scheme({
             key: 'k',
             value: 'b',
-            type: 't',
+            type: 'ms',
             rate: 0.1
-        })).to.equal('k:b|t@0.1');
+        })).to.equal('k:b|ms|@0.1');
     });
 });

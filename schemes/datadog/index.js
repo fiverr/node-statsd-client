@@ -1,5 +1,5 @@
 const DELIMETER_KEY_VALUE = ':';
-const DELIMETER_METRIC_TYPE = '|';
+const DELIMETER = '|';
 const DELIMETER_RATE = '@';
 const DELIMETER_TAGS = '#';
 const DELIMETER_TAGS_K_V = ':';
@@ -10,12 +10,12 @@ module.exports = function scheme({ type, key, value, rate, tags }) {
         key,
         DELIMETER_KEY_VALUE,
         value,
-        DELIMETER_METRIC_TYPE,
+        DELIMETER,
         type
     ];
 
-    rate && parts.push(DELIMETER_RATE, rate);
-    tags && parts.push(DELIMETER_TAGS, tagsString(tags));
+    rate && parts.push(DELIMETER, DELIMETER_RATE, rate);
+    tags && parts.push(DELIMETER, DELIMETER_TAGS, tagsString(tags));
 
     return parts.join('');
 };
