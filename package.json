@@ -35,12 +35,12 @@
     "sample-size": "^1.0.1"
   },
   "devDependencies": {
-    "@fiverr/eslint-config-fiverr": "^3.2.0",
+    "@fiverr/eslint-config-fiverr": "^3.2.4",
     "@lets/wait": "^2.0.2",
-    "chai": "^4.2.0",
+    "chai": "^4.3.0",
     "chai-string": "^1.5.0",
-    "eslint": "^7.13.0",
-    "eslint-plugin-log": "^1.2.6",
-    "mocha": "^8.2.1"
+    "eslint": "^7.20.0",
+    "eslint-plugin-log": "^1.2.7",
+    "mocha": "^8.3.0"
   }
 }
