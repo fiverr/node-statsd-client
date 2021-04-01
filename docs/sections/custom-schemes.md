@@ -15,6 +15,6 @@ To the instantiation parameter `scheme`, pass a function instead of a string. Th
 const stats = new SDC({
   ...
   // Simplistic example custom scheme function
-  scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}@${rate}#${Object.entries(tags).map(tag => tag.join(':')).join(',')}`
+  scheme: ({type, key, value, rate, tags}) => `${key}:${value}|${type}|@${rate}|#${Object.entries(tags).map(tag => tag.join(':')).join(',')}`
 });
 ```
