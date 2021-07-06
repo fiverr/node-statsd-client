@@ -5,7 +5,7 @@ const formatter = require('./lib/formatter');
 const push = require('./lib/push');
 const sender = require('./lib/sender');
 const spread = require('./lib/spread');
-const types = require('./lib/types');
+const types = require('./lib/types/index.json');
 
 const TYPES_LIST = Object.keys(types);
 const TYPES = Object.freeze(
