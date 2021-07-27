@@ -27,9 +27,9 @@ describe('SDC', () => {
     let client = null;
     const { random } = Math;
     before(() => {
-        require('sample-size');
+        require('./lib/sample');
         delete require.cache[require.resolve('.')];
-        require.cache[require.resolve('sample-size')].exports = (...args) => stubs.sample(...args);
+        require.cache[require.resolve('./lib/sample')].exports = (...args) => stubs.sample(...args);
         dependencies.forEach((dependency) => {
             const route = `./lib/${dependency}`;
             originals[dependency] = require(route);
@@ -60,7 +60,7 @@ describe('SDC', () => {
         dependencies.forEach((dependency) => {
             delete require.cache[require.resolve(`./lib/${dependency}`)];
         });
-        delete require.cache[require.resolve('sample-size')];
+        delete require.cache[require.resolve('./lib/sample')];
         delete require.cache[require.resolve('.')];
     });
 

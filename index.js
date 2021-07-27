@@ -1,4 +1,4 @@
-const sample = require('sample-size');
+const sample = require('./lib/sample');
 const betterror = require('./lib/betterror');
 const flush = require('./lib/flush');
 const formatter = require('./lib/formatter');
