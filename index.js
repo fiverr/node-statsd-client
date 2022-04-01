@@ -139,7 +139,8 @@ class SDC {
             key, // eslint-disable-line prefer-const
             value = 1, // eslint-disable-line prefer-const
             rate, // eslint-disable-line prefer-const
-            tags
+            tags,
+            enforceRate = true
         ] = spread(args);
 
         if (rate) {
@@ -156,7 +157,7 @@ class SDC {
                 );
             }
 
-            if (this.enforceRate && !sample(rate)) {
+            if (enforceRate && this.enforceRate && !sample(rate)) {
                 return this.size;
             }
         }
