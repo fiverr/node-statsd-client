@@ -140,7 +140,7 @@ class SDC {
             value = 1, // eslint-disable-line prefer-const
             rate, // eslint-disable-line prefer-const
             tags,
-            enforceRate = true
+            enforceRate = true // eslint-disable-line prefer-const
         ] = spread(args);
 
         if (rate) {
