@@ -9,6 +9,7 @@ Exposes a client with the functions: `count`, `time`, `gauge`, `set`, `histogram
 | value | Number\|Date\|BigInt | 1 | The value to report †
 | options.rate | Number | - | Sample rate - a fraction of 1 (.01 is one percent)
 | options.tags | Object | - | Key-value pairs of tags set as object literal
+| options.enforceRate | Boolean | true | Override instance enforceRate option with this value
 
 > † If `value` if a Date - instance will send the time diff (`Date.now()`)
 >
@@ -81,6 +82,7 @@ stats.time(
       route: 'users/:user_id',
       status_code: 200,
     },
+    enforceRate: true,
   }
 );
 ```

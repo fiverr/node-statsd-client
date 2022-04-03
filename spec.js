@@ -168,6 +168,12 @@ describe('SDC', () => {
         client.generic('count', 'a', 1, { rate: 0.4 });
         expect(called.push).to.be.true;
     });
+    it('Should override with local enforceRate', () => {
+        client = new SDC({ enforceRate: false });
+        stubs.sample = () => true;
+        client.generic('count', 'a', 1, { rate: 0.1, enforceRate: false });
+        expect(called.push).to.be.true;
+    });
     it('Should skip when sample is false', () => {
         client = new SDC();
         stubs.sample = () => false;
