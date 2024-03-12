@@ -1,6 +1,6 @@
 {
   "name": "@fiverr/statsd-client",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "📈 A feature packed, highly customisable StatsD client",
   "keywords": [
     "StatsD",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://fiverr.github.io/node-statsd-client",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "predocs": "which docsify || npm i --no-save docsify-cli",
     "docs": "docsify serve docs -p 6375",
