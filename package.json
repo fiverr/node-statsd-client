@@ -31,9 +31,6 @@
     "test": "mocha 'spec.js' '**/spec.js' --require .mocha",
     "lint": "eslint '.*.js' '*.js' '**/*.js'"
   },
-  "dependencies": {
-    "is-number": "^7.0.0"
-  },
   "devDependencies": {
     "@fiverr/eslint-config-fiverr": "^3.2.4",
     "@lets/wait": "^2.0.2",
