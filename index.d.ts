@@ -26,7 +26,7 @@ declare class SDC {
         // Maximum cutoff time (ms) until flush current metric bulk [1000]
         timeout?: number,
         // Default tags to be sent with every metric []
-        tags?,
+        tags?: Record<string, string>,
         // Format stats metric as: `'datadog'`, `'graphite'`, custom format function [datadog]
         scheme?: string|(
             ({
@@ -36,7 +36,7 @@ declare class SDC {
                 key: string,
                 value: number,
                 rate: number,
-                tags: string[]
+                tags: Record<string, string>
             }) => string),
         // Prefix all stats with this value []
         prefix?: string,
@@ -47,12 +47,12 @@ declare class SDC {
         // Should I enforce rate (mark as false is rate was already enforced) [true]
         enforceRate?: boolean,
     });
-    count(key: string, value: number, rate?: number, tags?: string[]): void;
-    time(key: string, value: number, rate?: number, tags?: string[]): void;
-    gauge(key: string, value: number, rate?: number, tags?: string[]): void;
-    set(key: string, value: number, rate?: number, tags?: string[]): void;
-    generic(type: string, key: string, value: number, rate?: number, tags?: string[]): void;
-    histogram(key: string, value: number, rate?: number, tags?: string[]): void;
+    count(key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
+    time(key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
+    gauge(key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
+    set(key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
+    generic(type: string, key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
+    histogram(key: string, value: number, { rate, tags }: { rate?: number, tags?: Record<string, string> } = {}): void;
     get size(): number;
     destroy(): void;
 }
